@@ -1,0 +1,146 @@
+#-- GEO1001.2020--hw01
+#-- Chris Poon
+#-- 4395538
+
+from hw01partA1 import readdata
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy.stats as stats
+import seaborn as sns
+
+def plotPmf(A,B,C,D,E,n):
+    TD, WS, CwS, HwS, TempA, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(A)
+    TD, WS, CwS, HwS, TempB, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(B)
+    TD, WS, CwS, HwS, TempC, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(C)
+    TD, WS, CwS, HwS, TempD, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(D)
+    TD, WS, CwS, HwS, TempE, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(E)
+
+    fig = plt.figure(figsize=(14,5))
+    ax1 = fig.add_subplot(231)
+    ax2 = fig.add_subplot(232)
+    ax3 = fig.add_subplot(233)
+    ax4 = fig.add_subplot(234)
+    ax5 = fig.add_subplot(235)
+    weights = np.ones_like(TempE) / float(len(TempE))
+    ax1.hist(x=TempA, bins=n, density=True, color='b',histtype = 'step')
+    ax1.set_ylabel('Probability')
+    ax1.set_xlabel('Temperature [\N{DEGREE SIGN}C]\nSensor A')
+    ax2.hist(x=TempB, bins=n, density=True, color='b',histtype = 'step')
+    ax2.set_ylabel('Probability')
+    ax2.set_xlabel('Temperature [\N{DEGREE SIGN}C]\nSensor B')
+    ax3.hist(x=TempC, bins=n, density=True, color='b',histtype = 'step')
+    ax3.set_ylabel('Probability')
+    ax3.set_xlabel('Temperature [\N{DEGREE SIGN}C]\nSensor C')
+    ax4.hist(x=TempD, bins=n, density=True, color='b',histtype = 'step')
+    ax4.set_ylabel('Probability')
+    ax4.set_xlabel('Temperature [\N{DEGREE SIGN}C]\nSensor D')
+    ax5.hist(x=TempE, bins=n, density=True, color='b',histtype = 'step',weights=weights)
+    ax5.set_ylabel('Probability')
+    ax5.set_xlabel('Temperature [\N{DEGREE SIGN}C]\nSensor E')
+    #fig.suptitle('PMFs for the 5 sensors Temperature values',)
+    plt.subplots_adjust(wspace=0.5)
+    plt.subplots_adjust(hspace=0.5)
+    plt.show()
+
+def plotCdf(A,B,C,D,E,vari,n):
+    TD, WSA, CwS, HwS, TempA, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(A)
+    TD, WSB, CwS, HwS, TempB, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(B)
+    TD, WSC, CwS, HwS, TempC, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(C)
+    TD, WSD, CwS, HwS, TempD, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(D)
+    TD, WSE, CwS, HwS, TempE, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(E)
+    
+    fig = plt.figure(figsize=(14,5))
+    ax1 = fig.add_subplot(111)
+    if vari == 'T':
+        a1 = ax1.hist(x=TempA, bins=n, cumulative=1, density=1, color='w', alpha=0.7, rwidth=0.85, histtype='barstacked')
+        a2 = ax1.hist(x=TempB, bins=n, cumulative=1, density=1, color='w', alpha=0.7, rwidth=0.85, histtype='barstacked')
+        a3 = ax1.hist(x=TempC, bins=n, cumulative=1, density=1, color='w', alpha=0.7, rwidth=0.85, histtype='barstacked')
+        a4 = ax1.hist(x=TempD, bins=n, cumulative=1, density=1, color='w', alpha=0.7, rwidth=0.85, histtype='barstacked')
+        a5 = ax1.hist(x=TempE, bins=n, cumulative=1, density=1, color='w', alpha=0.7, rwidth=0.85, histtype='barstacked')
+    if vari == 'WS':
+        a1 = ax1.hist(x=WSA, bins=n, cumulative=1, density=1, color='w', alpha=0.7, rwidth=0.85, histtype='barstacked')
+        a2 = ax1.hist(x=WSB, bins=n, cumulative=1, density=1, color='w', alpha=0.7, rwidth=0.85, histtype='barstacked')
+        a3 = ax1.hist(x=WSC, bins=n, cumulative=1, density=1, color='w', alpha=0.7, rwidth=0.85, histtype='barstacked')
+        a4 = ax1.hist(x=WSD, bins=n, cumulative=1, density=1, color='w', alpha=0.7, rwidth=0.85, histtype='barstacked')
+        a5 = ax1.hist(x=WSE, bins=n, cumulative=1, density=1, color='w', alpha=0.7, rwidth=0.85, histtype='barstacked')
+        
+    ax1.plot(a1[1][1:] - (a1[1][1:] - a1[1][:-1]) / 2, a1[0], label='Sensor A')
+    ax1.plot(a2[1][1:] - (a2[1][1:] - a2[1][:-1]) / 2, a2[0], label='Sensor B')
+    ax1.plot(a3[1][1:] - (a3[1][1:] - a3[1][:-1]) / 2, a3[0], label='Sensor C')
+    ax1.plot(a4[1][1:] - (a4[1][1:] - a4[1][:-1]) / 2, a4[0], label='Sensor D')
+    ax1.plot(a5[1][1:] - (a5[1][1:] - a5[1][:-1]) / 2, a5[0], label='Sensor E')
+    plt.ylabel('Cumulative Density')
+
+    if vari == 'T':
+        plt.xlabel('Temperature [\N{DEGREE SIGN}C]')
+        #plt.title('CDFs for the 5 sensors Temperature values')
+    if vari == 'WS':
+        plt.xlabel('Windspeed [m/s]')
+        #plt.title('CDFs for the 5 sensors Windspeed values')
+
+    plt.legend(loc='best')
+    plt.tight_layout()
+    plt.show()
+
+def plotPdf(A,B,C,D,E):
+    TD, WS, CwS, HwS, TempA, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(A)
+    TD, WS, CwS, HwS, TempB, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(B)
+    TD, WS, CwS, HwS, TempC, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(C)
+    TD, WS, CwS, HwS, TempD, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(D)
+    TD, WS, CwS, HwS, TempE, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(E)
+
+    mu1, sigma1 = np.mean(TempA), np.std(TempA)
+    mu2, sigma2 = np.mean(TempB), np.std(TempB)
+    mu3, sigma3 = np.mean(TempC), np.std(TempC)
+    mu4, sigma4 = np.mean(TempD), np.std(TempD)
+    mu5, sigma5 = np.mean(TempE), np.std(TempE)
+    x1 = np.linspace(mu1 - 4 * sigma1, mu1 + 4 * sigma1, 100)
+    x2 = np.linspace(mu2 - 4 * sigma2, mu2 + 4 * sigma2, 100)
+    x3 = np.linspace(mu3 - 4 * sigma3, mu3 + 4 * sigma3, 100)
+    x4 = np.linspace(mu4 - 4 * sigma4, mu4 + 4 * sigma4, 100)
+    x5 = np.linspace(mu5 - 4 * sigma5, mu5 + 4 * sigma5, 100)
+    plt.figure(figsize=(14, 5))
+    plt.plot(x1, stats.norm.pdf(x1, mu1, sigma1),label='Sensor A')
+    plt.plot(x2, stats.norm.pdf(x2, mu2, sigma2),label='Sensor B')
+    plt.plot(x3, stats.norm.pdf(x3, mu3, sigma3),label='Sensor C')
+    plt.plot(x4, stats.norm.pdf(x4, mu4, sigma4),label='Sensor D')
+    plt.plot(x5, stats.norm.pdf(x5, mu5, sigma5),label='Sensor E')
+    plt.ylabel('Probability Density')
+    plt.xlabel('Temperature [\N{DEGREE SIGN}C]')
+    #plt.title('PDFs for the 5 sensors Temperature values')
+    plt.ylim(ymin=0)
+    plt.legend(loc='best')
+    plt.show()
+
+def plotWSPdfkde(A,B,C,D,E,n):
+    TD, WSA, CwS, HwS, TempA, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(A)
+    TD, WSB, CwS, HwS, TempB, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(B)
+    TD, WSC, CwS, HwS, TempC, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(C)
+    TD, WSD, CwS, HwS, TempD, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(D)
+    TD, WSE, CwS, HwS, TempE, GTemp, WC, RH, HSI, DP, PWBTemp, SP, BP, Alt, DAlt, NAWBTemp, WBGT, TWL, MD = readdata(E)
+
+    ax1 = plt.subplot(231)
+    ax2 = plt.subplot(232)
+    ax3 = plt.subplot(233)
+    ax4 = plt.subplot(234)
+    ax5 = plt.subplot(235)
+    ax1.hist(x=WSA, bins=n, density=True, histtype='step', label='PDF')
+    ax1.set_xlabel('Sensor A')
+    ax2.hist(x=WSB, bins=n, density=True, histtype='step', label='PDF')
+    ax2.set_xlabel('Sensor B')
+    ax3.hist(x=WSC, bins=n, density=True, histtype='step', label='PDF')
+    ax3.set_xlabel('Sensor C')
+    ax4.hist(x=WSD, bins=n, density=True, histtype='step', label='PDF')
+    ax4.set_xlabel('Sensor D')
+    ax5.hist(x=WSE, bins=n, density=True, histtype='step', label='PDF')
+    ax5.set_xlabel('Sensor E')
+    sns.kdeplot(WSA, color='springgreen', ax=ax1, label="KDE")
+    sns.kdeplot(WSB, color='springgreen', ax=ax2, label="KDE")
+    sns.kdeplot(WSC, color='springgreen', ax=ax3, label="KDE")
+    sns.kdeplot(WSD, color='springgreen', ax=ax4, label="KDE")
+    sns.kdeplot(WSE, color='springgreen', ax=ax5, label="KDE")
+    plt.legend(loc='lower left', bbox_to_anchor=(1.5, 0))
+    #plt.suptitle('PDFs and the kernel density estimation for the 5 sensors Wind Speed values', )
+    plt.subplots_adjust(wspace=0.3)
+    plt.subplots_adjust(hspace=0.5)
+    plt.show()
