@@ -4,13 +4,9 @@
 geo1001_hw01.py is the main file to run the code.
 
 `A = '../data_hw01/HEAT - A_final.xls'
-
 B = '../data_hw01/HEAT - B_final.xls'
-
 C = '../data_hw01/HEAT - C_final.xls'
-
 D = '../data_hw01/HEAT - D_final.xls'
-
 E = '../data_hw01/HEAT - E_final.xls'`
 
 # hw01partA1.py
