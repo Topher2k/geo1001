@@ -6,7 +6,6 @@ from hw01partA1 import readdata
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
-from plotScatter import pScatter
 import pandas as pd
 
 def calcCorrelation(a,b):
@@ -59,6 +58,17 @@ def showCorrelation(A,B,C,D,E,vari):
     print(a)
     print("\nSpearmann's coefficients for",B)
     print(b)
+
+def pScatter(a,b):
+    # Step 1 --- remove nan numbers
+    a = np.array(a)
+    b = np.array(b)
+    a = a[~np.isnan(a)]
+    b = b[~np.isnan(b)]
+
+    # Step 2 --- interpolate to equal size samples
+    a1 = np.interp(np.linspace(0,len(b),len(b)),np.linspace(0,len(a),len(a)),a)
+    return  a1
 
 def plotScatter(A,B,C,D,E,vari):
     TD, WS, CwSA, HwSA, TempA, GTemp, WC, RH, HSI, DP, PWBTempA, SP, BP, Alt, DAlt, NAWBTemp, WBGTA, TWL, MD = readdata(A)
